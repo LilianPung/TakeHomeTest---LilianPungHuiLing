@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## 1. Data Cleaning, Transformations and ETL pipeline architecture
+# 
+# #### Clean the datasets, find correlation
+# Explain 5 reasons, why did you join the datasets in that way?
+# Provide a business use case from the datasets provided, that would likely bring benefits to a business.
+# Design a cloud/local-machine based pipeline architecture encompassing the business use case provided by you above. Architecture must take into consideration scalability, performance and simplicity. Data processing tools are up to your discretion. (Google cloud platform preferred)
+# How do you validate your analytics?
+# 
+
+# In[49]:
+
+
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+
+# In[54]:
+
+
+# Display 'loyalty.csv'
+df1 = pd.read_csv('loyalty.csv')
+
+special_char = ['#','$','%','&','[',']','/',' ']
+for char in special_char:
+    df1['email'] = df1['email'].str.replace(char,'')
+    
+display(HTML(df1.to_html()))
+
+
+# In[8]:
+
+
+# Display 'transactions.csv'
+df2 = pd.read_csv('transactions.csv')
+df2.head()
+
+
+# In[32]:
+
+
+# Join 2 tables: using column 'id' as the key
+df3 = pd.merge(df1, df2)
+df3.head()
+df3.info()
+# df3.iloc[50]
+#print(df3)
+
+
+# In[56]:
+
+
+# renaming columns 'license-plate', 'phone-number'
+df3.rename(columns = {'license-plate':'licensePlate','phone-number':'phoneNumber'}, inplace = True)
+
+special_char = ['@','#','$','%','&','.','[',']','/',' ']
+for char in special_char:
+    df3['licensePlate'] = df3['licensePlate'].str.replace(char,'')
+
+# to check: show rows from column 'licensePlate' that has special characters
+print(df3[df3.licensePlate.str.contains(r'@#$%&.')])
+
+
+# In[50]:
+
+
+# check data is clean
+# print(df3)
+# print(df3['licensePlate'])
+display(HTML(df3.to_html()))
+
+
+# In[ ]:
+
+
+
